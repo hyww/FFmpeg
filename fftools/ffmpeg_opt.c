@@ -2261,13 +2261,13 @@ static int open_output_file(OptionsContext *o, const char *filename)
                 new_video_stream(o, oc, idx);
         }
 
-        /* audio: most channels */
+        /* audio: most channels, higher bit rate */
         if (!o->audio_disable && av_guess_codec(oc->oformat, NULL, filename, NULL, AVMEDIA_TYPE_AUDIO) != AV_CODEC_ID_NONE) {
             int best_score = 0, idx = -1;
             for (i = 0; i < nb_input_streams; i++) {
                 int score;
                 ist = input_streams[i];
-                score = ist->st->codecpar->channels + 100000000*!!ist->st->codec_info_nb_frames
+                score = ist->st->codecpar->bit_rate + 500000*ist->st->codecpar->channels + 100000000*!!ist->st->codec_info_nb_frames
                         + 5000000*!!(ist->st->disposition & AV_DISPOSITION_DEFAULT);
                 if (ist->user_set_discard == AVDISCARD_ALL)
                     continue;
