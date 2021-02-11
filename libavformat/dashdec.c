@@ -156,6 +156,7 @@ typedef struct DASHContext {
     int is_init_section_common_video;
     int is_init_section_common_audio;
     int is_init_section_common_subtitle;
+    char *decryption_key;
 
 } DASHContext;
 
@@ -1919,6 +1920,7 @@ static int reopen_demux_for_component(AVFormatContext *s, struct representation 
     pls->ctx->io_open  = nested_io_open;
 
     // provide additional information from mpd if available
+    av_dict_set(&in_fmt_opts, "decryption_key", c->decryption_key, 0);
     ret = avformat_open_input(&pls->ctx, "", in_fmt, &in_fmt_opts); //pls->init_section->url
     av_dict_free(&in_fmt_opts);
     if (ret < 0)
@@ -2379,6 +2381,7 @@ static const AVOption dash_options[] = {
         OFFSET(allowed_extensions), AV_OPT_TYPE_STRING,
         {.str = "aac,m4a,m4s,m4v,mov,mp4,webm,ts"},
         INT_MIN, INT_MAX, FLAGS},
+    { "decryption_key", "The media decryption key (hex)", OFFSET(decryption_key), AV_OPT_TYPE_STRING, .flags = AV_OPT_FLAG_DECODING_PARAM },
     {NULL}
 };
 
