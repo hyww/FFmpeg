@@ -58,6 +58,10 @@ static int webvtt_write_header(AVFormatContext *ctx)
 
     avio_printf(pb, "WEBVTT\n");
 
+    if (par->extradata_size > 0) {
+        avio_printf(pb, "\nSTYLE\n%s\n", par->extradata);
+    }
+
     return 0;
 }
 
